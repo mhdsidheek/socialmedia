@@ -1,0 +1,25 @@
+const AuthReducer =(state,action) =>{
+    switch(action.type){
+        case "LOGIN_START":
+            return{
+                user:null,
+                isFecthing:true,
+                error:false,
+            };
+            case "LOGIN_Success":
+                return{
+                    user:action.payload,
+                    isFecthing:false,
+                    error:false
+                };
+                case "LOGIN_Fail":
+                return{
+                    user:action.payload,
+                    isFecthing:false,
+                    error:action.payload,
+                };
+                default :
+                return state;
+    }
+}
+export default AuthReducer;
