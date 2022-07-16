@@ -3,9 +3,9 @@ import Home from "./pages/Home/Home"
 import { BrowserRouter,  Route, Routes, useNavigate } from "react-router-dom"
 import SignUp from './pages/Signup/Signup'
 import Login from './pages/login/Login'
-import { useContext } from "react";
-import { AuthContext } from "./contexts/AuthContext";
+import Editpost from "./pages/edit post/Editpost";
 import { useEffect } from "react";
+import Error from "./pages/Error";
 
 
 
@@ -13,10 +13,10 @@ const Routing =() =>{
   const navigate = useNavigate()
   useEffect(()=>{
    
-    const user = localStorage.getItem("userdetails")
+    const user = localStorage.getItem("token")
   if(user){
    
-  navigate('/')
+  // navigate('/')
   }else{
     navigate("/login")
     
@@ -26,8 +26,10 @@ const Routing =() =>{
   return(
    < Routes>
      <Route path="/" element={<Home/> }/>
-     <Route path="/login" element={<Login/> }/>
+     <Route exact path="/login" element={<Login/> }/>
      <Route path="/signup" element={<SignUp/> }/>
+     <Route   path="*" element={<Error />}/>
+     <Route path="/editpost/:postId" element ={<Editpost/>}/>
     </Routes>
 
   )
@@ -35,7 +37,7 @@ const Routing =() =>{
 }
 
 function App() {
-  const {user} =useContext(AuthContext)
+  
   return (
     <Box>
        <BrowserRouter>

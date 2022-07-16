@@ -10,37 +10,44 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {LoginCall} from "../../apiCalls"
-import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate,Link } from 'react-router-dom';
 import axios from 'axios'
 import { useState } from 'react';
 import { color } from '@mui/system';
-
+import {useDispatch} from "react-redux";
+import { logInUser } from "../../Redux/slices/userdata"
 
 export default function Login() {
-  const [err,seterr]=useState()
+
+  const [err,seterr]=useState();
   const email = React.useRef();
   const password =React.useRef();
  const  navigate=useNavigate()
-  const {user, isFecthing, error,  dispatch} =React.useContext(AuthContext)
+ const dispatch = useDispatch();
+ 
   const handleSubmit =async (event) => {
     event.preventDefault();
-    
-    
-   
- try{ const  userCredential=({email:email.current.value, password:password.current.value})
+ try{
+   const  
+   userCredential=({email:email.current.value, password:password.current.value})
     const res =await axios.post("auth/login",userCredential);
-  
+    console.log("amal",res);
+    
+   localStorage.setItem("userdetails",JSON.stringify(res.data.user))
+   localStorage.setItem("token",res.data.token)
+   console.log("res.data",res.data.token,res.data.user)
+
    navigate('/')
+   dispatch(logInUser(res.data.user))
   }catch(err){
+    console.log("koooi",err.response.data);
     seterr(err.response.data)
   }
      
   
    
   };
-console.log(user)
+
   return (
    
       <Container component="main" maxWidth="xs">
@@ -56,7 +63,7 @@ console.log(user)
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <span style={{color:"red"}}>{err}</span>
+          {/* <span style={{color:"red"}}>{err}</span> */}
           <Typography component="h1" variant="h5">
             Login 
           </Typography>
@@ -97,7 +104,7 @@ console.log(user)
       
 
             >
-            { isFecthing ? "loading": "Sign In" }
+             Sign In
             </Button>
             <Grid container>
               <Grid item xs>

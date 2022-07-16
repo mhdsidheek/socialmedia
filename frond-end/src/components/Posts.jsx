@@ -1,24 +1,76 @@
-import { Favorite, FavoriteBorder, MoreVert, Share } from '@mui/icons-material'
+import { Edit, Favorite, FavoriteBorder, MoreVert, Send, Share } from '@mui/icons-material'
+import SendIcon from '@mui/icons-material/Send';
 import { Card, CardContent, Typography,Box, CardHeader,
      Avatar, IconButton, CardMedia,
-      CardActions, Checkbox } from '@mui/material';
+      CardActions, Checkbox, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {format} from "timeago.js"
 
 
 export default function Post({post}) {
- 
+  console.log("like",post.likes?.length);
+ const PF = "http://localhost:4000/images/";
+ const [like,setLike] = useState(post.likes?.length)
+ const [isliked ,setIsliked] =useState(false)
+ const comm=post.comments
+ const [commen,setCommen] = useState(comm)
 const [user , setUser] =useState({});
-  
+const Token=localStorage.getItem("token");
+
+const userr = useSelector((state)=> state.user.value)
+     
+
+
+
+
+const likeHandler =async () =>{
+  console.log("postid",post._id)
+  try{
+    await axios.put( "/posts/"+post._id+"/like",{
+      userId:userr._id,
+    })
+
+  }catch(err){console.log(err)}
+  setLike(isliked ? like -1 : like +1)
+  setIsliked(!isliked)
+}
 useEffect(()=>{
+
+ 
   const fetchUser = async() =>{
-  const res= await axios.get(`users/${post.userId}`);
-  setUser(res.data)
+    
+  const res= await axios.get(`users/${userr._id}`,
+  
+  {
+    
+    headers :{
+     "auth" : localStorage.getItem("token")
+    } 
+  }
+ 
+  )
+   
+ setUser(res.data)
 }
 fetchUser()
   
-},[post.userId]) 
+},[]) 
+
+ const makeComment = async (text,postId,) =>{
+  console.log("make",text,postId,userr.username);
+   const result= await axios.patch("/posts/comment",{
+      text,
+      postId,
+      username:userr.username
+    })
+    setCommen(result.data.comments)
+ }
+
+ 
+ console.log(post.comments,"hgfjcjc")
   return (
 
     <Box   flex={4} p={2} >
@@ -27,21 +79,27 @@ fetchUser()
        avatar={
          <Avatar  src=  {user.profilePicture} 
        aria-label="recipe">
+
           
          </Avatar>
        }
        action={
+        <Link to={`/editpost/${post._id}`} >
          <IconButton aria-label="settings">
-           <MoreVert />
+           <Edit  />
          </IconButton>
+         </Link>
+         
+
        }
        title={user.username}
        subheader={format(post.createdAt)}
      />
+    
      <CardMedia
        component="img"
        height="15%"
-       image="https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg?auto=compress&cs=tinysrgb&w=600"
+       image={PF + post.img}
        alt="Paella dish"
      />
      <CardContent>
@@ -51,15 +109,50 @@ fetchUser()
      </CardContent>
      <CardActions disableSpacing>
        <IconButton aria-label="add to favorites">
-       <Checkbox  icon={<FavoriteBorder />}   checkedIcon={<Favorite sx={{color:"red"}}/>} />
+       <Checkbox  icon={<FavoriteBorder />}  onClick={ likeHandler } checkedIcon={<Favorite sx={{color:"red"}}/>} />
        </IconButton>
-       <IconButton aria-label="share">
-         <Share />
-         
-       </IconButton>
-       <span className='postcommenttext'>{post.comment}comments</span>
-      
+       
+       <span > {like +"   peopleliked" }</span>
+
+       
+     
+       
      </CardActions>
+     <CardActions>
+     
+     
+    <CardContent sx={{marginBottom:3}}>
+    {commen?.map((record) => {
+          return (
+            <div>
+              <span style={{ fontWeight: "500" }}>{record.username}</span>{" "}
+              <span>:</span>
+              {record.text}
+            </div>
+          );
+        })}
+        </CardContent>
+
+</CardActions>
+     
+     <form onSubmit={(e)=>{
+        e.preventDefault()
+        makeComment(e.target[0].value,post._id);
+       }}>
+        <TextField
+           style={{marginBottom:10}} 
+              sx={{ width: "100%" }}
+              id="desc"
+              name="comments"
+              rows={3}
+              placeholder={
+                "put comments"
+              }
+              variant="standard"
+            />
+            <Send  type="submit"  style={{marginLeft:"300"}}/>
+       </form>
+       
     
    </Card>
    </Box>

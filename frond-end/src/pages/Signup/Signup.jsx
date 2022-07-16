@@ -3,37 +3,58 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRef } from 'react';
 import {useNavigate,Link} from "react-router-dom";
 import axios from "axios"
 import {useForm} from  "react-hook-form"
 
+import { useState } from 'react';
+import { MenuItem } from '@mui/material';
 
 
 
-const theme = createTheme();
+
+
 
 export default function SignUp() {
-  const {register ,handleSubmit,formState:{errors},trigger,reset} = useForm(); 
+  const {register ,handleSubmit,formState:{errors},trigger,reset} = useForm();
+  const [usertype, setUsertype] = useState('');
+
+  const handleChange = (event) => {
+    setUsertype(event.target.value);
+  };
+  
 
   const username =useRef();
   const email =useRef();
   const password =useRef();
   const passwordAgain =useRef();
   const history =useNavigate();
+  const currencies = [
+    {
+      value: 'USD',
+      label: 'tutor',
+    },
+    {
+      value: 'EUR',
+      label: 'Student',
+    }
+  ];
+  
 const onSubmit =(data)=>{
   console.log(data);
 }
+
+
+
 console.log(errors);
   const handleSubmits =async (event) => {
+    console.log("event",event);
     event.preventDefault();
     if(passwordAgain.current.value !==password.current.value){
       password.current.setCustomValidity("Passwords don't match");
@@ -58,7 +79,7 @@ console.log(errors);
    
 
   return (
-    <ThemeProvider theme={theme}>
+    
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -173,12 +194,28 @@ console.log(errors);
                 
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-                
+              <TextField
+          id="outlined-select-currency"
+          select
+          label="Select  user type"
+          value={usertype}
+          onChange={handleChange}
+          // helperText="Please select your currency"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        
+      
+            
               </Grid>
+              
+              
             </Grid>
             <Button
               type="submit"
@@ -200,6 +237,6 @@ console.log(errors);
         </Box>
        
       </Container>
-    </ThemeProvider>
+   
   );
 }

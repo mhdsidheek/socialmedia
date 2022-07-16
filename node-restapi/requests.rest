@@ -1,0 +1,2 @@
+PUT http://localhost:4000/api/users/62bedca78bf5d791a4baf300/follow
+

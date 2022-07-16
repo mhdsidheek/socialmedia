@@ -6,8 +6,7 @@ import {Mail, Notifications, School} from "@mui/icons-material"
 import React from 'react'
 import { useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+
 
 
 
@@ -45,11 +44,12 @@ alignItems :"centre",
 
 const Navbar=()=> {
   const [open ,setOpen] =useState(false)
- const {user}=useContext(AuthContext)
- console.log(user,"ydgygd")
+ 
+ 
   const history =useNavigate()
   const logout =()=>{
     localStorage.removeItem('userdetails')
+    localStorage.removeItem('token')
     history("/login")
      
   }

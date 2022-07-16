@@ -8,7 +8,9 @@ import { useState } from "react";
 import { Box, createTheme, Stack, ThemeProvider } from "@mui/material";
 
 
+
 function Home() {
+
   const [mode, setMode] = useState("light");
   const darkTheme = createTheme({
     palette: {

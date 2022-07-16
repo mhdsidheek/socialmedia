@@ -11,7 +11,20 @@ function Feeds() {
  
   useEffect(()=>{
     const fetchPosts = async() =>{
-    const res= await axios.get(`posts/timeline/62bed5eaf08c390ac9c05757`)
+     const user = localStorage.getItem('userdetails')
+     const Token =localStorage.getItem('token')
+  const   userinfo =JSON.parse(user)
+  // console.log(Token)
+
+    const res= await axios.get(`posts/timeline/${userinfo._id}`,
+    {
+    
+      headers :{
+        "auth" :Token
+      }
+      
+    }
+    )
     setPosts(res.data)
   }
   fetchPosts()
