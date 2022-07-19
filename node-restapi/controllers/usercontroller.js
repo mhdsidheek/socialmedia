@@ -5,6 +5,17 @@ const { generateToken}= require("../routes/Token")
 // register a user
 
 registerUser = async (req, res) => {
+   console.log("rewq",req.body);
+  const verify=req.body.usertype
+  var type;
+  if(verify=='tutor'){
+
+    var type='tutor'
+  }else{
+    var type='student';
+    
+  }
+
     try {
       // generate password
       const salt = await bcrypt.genSalt(10);
@@ -15,9 +26,11 @@ registerUser = async (req, res) => {
         username: req.body.username,
         email: req.body.email,
         password: hashPassword,
+         userType:type
       });
       // save user
       const user = await newUser.save();
+      console.log("newuser",user);
       res.status(200).json(user);
     } catch (err) {
       console.log(err);
@@ -28,14 +41,14 @@ registerUser = async (req, res) => {
 //   login user
 
   loginUser = async (req, res) => {
-    // console.log("login", req.body);
+    console.log("login", req.body);
   
     const user = await User.findOne({ email: req.body.email });
   
     if (user && (await bcrypt.compare(req.body.password, user.password))) {
       const token = generateToken(user._id);
-      // console.log("token", token);
-      // console.log("us", user._id);
+      console.log("token", token);
+      console.log("us", user._id);
   
       res.status(200).json({ user, token });
     } else {
@@ -45,39 +58,69 @@ registerUser = async (req, res) => {
 
 //   update user
   updateUser = async(req,res)=>{
-    if(req.body.userId ===req.params.id ||req.body.isAdmin){
-        if(req.body.password){
-            try{
-
-                const salt =await bcrypt.genSalt(10)
-                req.body.password =await bcrypt.hash(req.body.password ,salt)
-
-            }catch(err){
-                return res.status(500).json(err)
-            }
-        }try{
-           const user =await User.findByIdAndUpdate(req.params.id,
-            {$set:req.body});
+    console.log("update",req.body);
+        try{
+           const user = await User.findByIdAndUpdate(req.body.userid,
+            {$set:{username:req.body.username}});
+            console.log("usserr",user);
             res.status(200).json("Accont has been updated")
         }catch(err){
             res.status(500).json(err)
         }
 
-    }else{
-        return res.status(403).json("you can only update youre acount ")
-    }
+    
  
 }
+
+const updatePassword =async (req,res) =>{
+  console.log(req.body);
+  const {currentpassword, newpassword, userId} = req.body
+  console.log("amal",currentpassword,newpassword,userId);
+ 
+      let user =await User.findOne({ _id: userId })
+      console.log("achu",user);
+      if (user) {
+        await  bcrypt.compare(currentpassword, user.password).then(async(status) => {
+          console.log("123",status);
+              if (status) {
+                 const salt= await bcrypt.genSalt(10)
+                 console.log("salt",salt);
+              const   newPassword = await bcrypt.hash(newpassword, salt)
+              console.log("newpas",newPassword);
+             await  User.findByIdAndUpdate(userId , 
+                       {
+                          password: newPassword
+                      },{
+                         new:true,
+                     }
+                  ).then((response) => {
+                      if (response) {
+                          res.status(200).json("Password changed")
+                      } else {
+                          console.log("error");
+                          res.status(500).json("Password not updated")
+                      }
+                  })
+
+              } else {
+                  res.status(400).json("Please enter the current Password properly")
+              }
+
+          })
+      }
+    }
 
 
 // get a user
 
 getAuser =async(req,res)=>{
+  console.log("get",req.params.id);
     try{
 
       const user=  await User.findById(req.params.id)
+      console.log("usr",user);
       const {password,updatedAt, ...others} =user._doc
-        res.status(200).json(others)
+       return  res.status(200).json(others)
     }catch(err){
      res.status(500).json(err)
     }
@@ -159,4 +202,4 @@ deleteAuser =async(req,res)=>{
 
 
   module.exports={registerUser,loginUser ,updateUser 
-    ,getAuser,followAuser,unfollowAuser,deleteAuser}
+    ,getAuser,followAuser,unfollowAuser,deleteAuser,updatePassword}

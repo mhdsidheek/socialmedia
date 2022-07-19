@@ -17,7 +17,7 @@ router.route("/updatepost").put(updatePost)
 router.route("/delete/:id").delete(deletePost)
 
 // like a post
-router.route("/:id/like").put(verifytoken , likeApost);
+router.route("/:id/like").put( likeApost);
 // comment a post
 router.route("/comment").patch(comment)
 // get a post

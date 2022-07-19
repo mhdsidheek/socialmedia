@@ -1,7 +1,7 @@
 import { AppBar,
    Avatar, Badge,
     InputBase, Toolbar,
-     Typography,styled, Menu, MenuItem } from '@mui/material';
+     Typography,styled, Menu, MenuItem, Button } from '@mui/material';
 import {Mail, Notifications, School} from "@mui/icons-material"
 import React from 'react'
 import { useState } from 'react';
@@ -63,6 +63,12 @@ const Navbar=()=> {
         
            <School sx={{display :{xs:"block",sm:"none"}}}/>
            <Search>< InputBase placeholder="serch....."></InputBase></Search>
+          
+           <Button className="btn"
+          variant="contained"
+           style={{ bgcolor:"black" }}
+           
+           > premium membership</Button>
            <Icons>
            <Badge badgeContent={4} color="error">
           <Mail />

@@ -37,11 +37,11 @@ export default function SignUp() {
   const history =useNavigate();
   const currencies = [
     {
-      value: 'USD',
+      value: 'tutor',
       label: 'tutor',
     },
     {
-      value: 'EUR',
+      value: 'student',
       label: 'Student',
     }
   ];
@@ -60,10 +60,12 @@ console.log(errors);
       password.current.setCustomValidity("Passwords don't match");
     }
       else{
+
         const user ={
           username :username.current.value,
           email :email.current.value,
-          password :password.current.value
+          password :password.current.value,
+          usertype :usertype
         }
         try{
 
@@ -200,7 +202,7 @@ console.log(errors);
           label="Select  user type"
           value={usertype}
           onChange={handleChange}
-          // helperText="Please select your currency"
+          helperText="Please select your currency"
           fullWidth
           sx={{ mt: 3, mb: 2 }}
         >

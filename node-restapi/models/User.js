@@ -56,17 +56,12 @@ const UserSchema =new mongoose.Schema({
         type:Number,
         enum:[1,2,3,4]
     },
-    isstudent:{
-        type:Boolean,
-        default:false
-    },
-    istutor:{
-        type:Boolean,
-        default:false
-    },
     isblocked:{
         type:Boolean,
         default:false
+    },
+    userType:{
+        type:String
     }
    
        

@@ -16,7 +16,7 @@ function Feeds() {
   const   userinfo =JSON.parse(user)
   // console.log(Token)
 
-    const res= await axios.get(`posts/timeline/${userinfo._id}`,
+    const res= await axios.get(`/posts/timeline/${userinfo._id}`,
     {
     
       headers :{

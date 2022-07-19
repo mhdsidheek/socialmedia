@@ -4,8 +4,9 @@ import { Card, CardContent, Typography,Box, CardHeader,
       CardActions, Checkbox, TextField, Button } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import {format} from "timeago.js"
+import Navbar from '../../components/Navbar'
 
 
 export default function Editpost() {
@@ -14,6 +15,7 @@ const  PF = "http://localhost:4000/images/"
  const [desc,setDesc] =useState()
 const postId = useParams().postId;
 console.log("postid",postId);
+const navigate =useNavigate()
 
 useEffect(()=>{
     const getpost = async ()=>{
@@ -33,7 +35,7 @@ const updatePost = async() =>{
         postId
     })
    {console.log("123",res)}
-   Navigate("/");
+   navigate("/");
 
 }
 
@@ -42,12 +44,24 @@ const DeletePost =async () =>{
     console.log("delete",postId)
     const res = await axios.delete(`/posts/delete/${postId}`)
     console.log("dres",res);
-    // navigate("/")
+     navigate("/")
 }
 
   return (
+    <>
+    <Navbar/>
+    <Box   flex={4} p={2}
+    sx={{
+      height:"400px",
+      flexGrow:1,
+      margin :"30px auto",
+      maxWidth:"700px",
+      padding:"20px",
+      textAlingn:"center",
+      bodersolid:"5px"
 
-    <Box   flex={4} p={2} >
+    }}
+    >
     <Card >
      <CardHeader
     
@@ -59,6 +73,7 @@ const DeletePost =async () =>{
    
      />
      <CardMedia
+     
        component="img"
        height="15%"
        image={PF+post?.img}
@@ -93,6 +108,7 @@ const DeletePost =async () =>{
     
    </Card>
    </Box>
+   </>
     
   )
 }

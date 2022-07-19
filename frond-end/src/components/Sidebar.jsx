@@ -1,13 +1,18 @@
 import { AccountBox, Group, Home, ModeNight, School, Settings } from '@mui/icons-material'
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Switch } from '@mui/material'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 function Sidebar({mode,setMode}) {
+  const userr =useSelector((state)=>state.user.value)
+  console.log("sidebar",userr);
+  const userId =userr._id
   return (
    <Box 
     flex={1}
      p={2}
-     sx={{display:{xs:"none",sm:"block"}}}
+     sx={{display:{xs:3,sm:"block",}}}
       >
         <Box position = "fixed">
 
@@ -33,12 +38,14 @@ function Sidebar({mode,setMode}) {
       </List>
       <List>
       <ListItem disablePadding>
+      <Link to={`/profile/${userId}`}>
         <ListItemButton component="a" herf="#Home">
           <ListItemIcon>
          <AccountBox/>
           </ListItemIcon>
           <ListItemText primary="profile" />
         </ListItemButton>
+          </Link>
       </ListItem>
       </List>
       <List>
@@ -53,12 +60,14 @@ function Sidebar({mode,setMode}) {
       </List>
       <List>
       <ListItem disablePadding>
+        <Link to ="/courses">
         <ListItemButton component="a" herf="#Home">
           <ListItemIcon>
          <School/>
           </ListItemIcon>
           <ListItemText primary="Courses" />
         </ListItemButton>
+        </Link>
       </ListItem>
       </List>
       <List>
